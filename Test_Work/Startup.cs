@@ -62,7 +62,7 @@ namespace Test_Work
                 endpoints.MapControllerRoute("Homepage", "{controller=Home}/{action=Index}",
                     new { controller = "Home", action = "Index" });
             });
-
+            // I don't have experience with NHibernate, but I believe, that it should be done by migration, not by hardcoded thing in the startup.cs
             var nhHelper = new NHibernateHelper();
             nhHelper.InitTable<Models.Url>();
 
