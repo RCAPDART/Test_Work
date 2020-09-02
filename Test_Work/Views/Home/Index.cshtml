@@ -1,0 +1,51 @@
+﻿@model IList<Test_Work.Models.Url>
+
+<p>
+    <button class="btn btn-success btn-xs">
+        <a asp-action="Create" class="button">Create URL</a>
+    </button>
+</p>
+<div class="text-center">
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Long Url</th>
+                <th scope="col">Short Url</th>
+                <th scope="col">Created On</th>
+                <th scope="col">Redirects</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Test_Work.Models.Url url in Model)
+            {
+                @Html.Partial("_TableRow", url);
+            }
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+    var urlIncreaseVisit = "@Url.Action("IncreaseVisit", "Home")";
+
+    baseRequest = function (verb, credentials = 'same-origin') {
+        return {
+            method: verb,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: credentials
+        }
+    }
+
+    increaseVisit = function (id) {
+    var request = this.baseRequest('POST')
+
+    request['body'] = JSON.stringify(id)
+
+    //alert('urlAdd')
+    fetch(urlIncreaseVisit, request)
+        .then((res) => { console.log(res); window.location.href="@Url.Action("Index", "Home")"; })
+    }
+</script>

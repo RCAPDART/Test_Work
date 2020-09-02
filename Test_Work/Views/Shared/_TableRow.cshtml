@@ -1,0 +1,31 @@
+﻿@model Test_Work.Models.Url
+
+@{var host = $"{Context.Request.Scheme}://{Context.Request.Host.Value}";
+    var shortUrl = host + "/Min/" + Model.ShortUrl;
+}
+
+<tr>
+    <th><a href="@Model.LongUrl" target="_blank">@Model.LongUrl</a></th>
+
+    <td>
+        <a href="@Model.LongUrl" target="_blank" onclick="javascript:increaseVisit(@Model.Id)">
+            @shortUrl
+        </a>
+    </td>
+    <td>@Model.CreatedOn.ToString("dd.MM.yyyy")</td>
+    <td>@Model.RedirectCount</td>
+    <td>
+        <p>
+            <button class="btn btn-primary btn-xs">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="button">Edit</a>
+            </button>
+        </p>
+    </td>
+    <td>
+        <p>
+            <button class="btn btn-danger btn-xs">
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="button">Delete</a>
+            </button>
+        </p>
+    </td>
+</tr>

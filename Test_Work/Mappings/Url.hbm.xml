@@ -1,0 +1,17 @@
+﻿<?xml version = "1.0" encoding = "utf-8" ?>
+
+<hibernate-mapping xmlns = "urn:nhibernate-mapping-2.2"
+   assembly = "Test_Work" namespace = "Test_Work.Models">
+
+  <class name = "Url">
+    <id name = "Id">
+      <generator class = "native"/>
+    </id>
+
+    <property name = "LongUrl"  not-null="true"/>
+    <property name = "ShortUrl"  not-null="true" unique="true"/>
+    <property name = "CreatedOn" not-null="true"/>
+    <property name = "RedirectCount" not-null="true"/>
+  </class>
+
+</hibernate-mapping>

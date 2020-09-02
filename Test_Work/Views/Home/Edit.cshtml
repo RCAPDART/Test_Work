@@ -1,0 +1,49 @@
+﻿@model Test_Work.Models.Url
+
+@{ ViewData["Title"] = "Edit"; }
+
+<h3>Edit URL</h3>
+
+<hr />
+<div class="row">
+    <div class="container">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="LongUrl" class="control-label"></label>
+                <input asp-for="LongUrl" class="form-control" />
+                <span asp-validation-for="LongUrl" class="text-danger"></span>
+            </div>
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ShortUrl)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ShortUrl)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.CreatedOn)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.CreatedOn)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.RedirectCount)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.RedirectCount)
+                </dd>
+            </dl>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<hr />
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
