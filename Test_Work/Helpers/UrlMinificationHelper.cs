@@ -10,16 +10,17 @@ namespace Test_Work.Helpers
         {
             if (withSeed)
             {
-                var seed = DateTime.Now;
+                var seed = DateTime.Now; // Ticks are more suitable for seed.
                 longUrl = $"{longUrl}{seed.ToString("o")}";
             }
 
-            int symbolCount = 4;
+            int symbolCount = 4; // From config? Why int, not var? You are using in some places var and in some places classNames.
             int startindex = new Random().Next(0, 31 - (symbolCount + 1));
 
             return GetShortHash(url: longUrl,startindex: startindex, symbolCount: symbolCount);
         }
 
+        // Public with private methods are meshed.
         private static string GetSHA256(string originalUrl)
         {
             try
