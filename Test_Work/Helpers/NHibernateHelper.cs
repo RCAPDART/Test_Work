@@ -63,6 +63,7 @@ namespace Test_Work.Helpers
 
         private ISessionFactory CreateSessionFactory()
         {
+            // Why it is not from config?
             const string host = "localhost";
             const string port = "3307";
             const string database = "test_work";
@@ -90,7 +91,7 @@ namespace Test_Work.Helpers
             return cfg.BuildSessionFactory();
 
 
-
+            // Why so many empty lines?
         }
     }
 }
