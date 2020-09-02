@@ -20,7 +20,13 @@ namespace Test_Work.Controllers
     {
         private readonly IUrlMinificationHelper _urlMinificationHelper;
         private readonly IRepository<Url> _urlRepository;
-
+        
+        // The most important error in this code is using UrlEntity from database as a business model.
+        // It is only a model, which is describing state of the entity in the DB. You need to convert it from the model of the data layer to the model of the business layer.
+        // Also - your repository is only the wrapper of the NHibernate service. At least you should add logic of convertion the data-layer objects to the business layer objects.
+        // At this case - you will pass to the service (which is not existing here) business layer model and it will ask repository to save it as a data-layer object. The same is for read operations.
+        // Controllers should not know anything about the data-layer.
+        
         public HomeController(IUrlMinificationHelper urlMinificationHelper, IRepository<Url> urlRepository)
         {
             _urlMinificationHelper = urlMinificationHelper;
