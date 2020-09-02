@@ -25,12 +25,19 @@ namespace Test_Work.Controllers
         {
             _urlMinificationHelper = urlMinificationHelper;
             _urlRepository = urlRepository;
-
+            // Why this logic is here? It should be called in startup if it is defined in the startup.cs
             //Create test data
+            
+            // Why not !_urlRepostiroy.Any()? Count is pretty expensive operation. 
             if (_urlRepository.RowCount() < 1)
             {
                 var LongUrl = "https://www.yandex.ru";
-                var hortUrl = _urlMinificationHelper.UrlMinificate(LongUrl);
+                // I'm wondering why you are initializing this in this way. It is not the way of OOP (encapsulation). 
+                // You are ruling public properties of the object from the outside. This should be done via methods, or via constructor.
+                // CreatedOn should be always readonly and should be set up in the internal logic of the class.
+                // Also 'CreatedOn' usually going with 'ModifiedOn' together. If it is applieble in your app.
+                
+                var hortUrl = _urlMinificationHelper.UrlMinificate(LongUrl); // Typo in "short". Resharper has plugin for checking typos.
                 var url1 = new Url
                 {
                     LongUrl = LongUrl,
@@ -61,6 +68,7 @@ namespace Test_Work.Controllers
                     RedirectCount = 0
                 };
 
+                // Usually repositories are using inside of the services. Not inside controllers. 
                 _urlRepository.Insert(url1);
                 _urlRepository.Insert(url2);
                 _urlRepository.Insert(url3);
@@ -81,7 +89,7 @@ namespace Test_Work.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(string LongUrl)
+        public IActionResult Create(string LongUrl) // why PascalCase?
         {
             var isUrlValid = UrlChecker(LongUrl);
             
@@ -90,7 +98,10 @@ namespace Test_Work.Controllers
                 ModelState.AddModelError("Url", $"URL: {LongUrl} is invalid");
             }
 
-            if (ModelState.IsValid)
+            // Try to use "Guardian" pattern. 
+            // In the simple words - if you have check, which is blocking logic (!ModelState.IsValid) - check, that it is invalid - and return "bad response".
+            // Don't go forward, if you met block. Also - it will decrease nesting.
+            if (ModelState.IsValid) // What is difference between isUrlValid and ModelState.IsValid? It is confusing.
             {
                 var _hortUrl = _urlMinificationHelper.UrlMinificate(LongUrl);
                 var res = new Url()
@@ -104,18 +115,20 @@ namespace Test_Work.Controllers
                 _urlRepository.Insert(res);
                 return RedirectToAction("SuccessAction", res);
             };
-
+            // This is what I told about. In "if" statement - you return "SuccessAction" and in the end of the method - you returned "Error" action.
             var errors = ExtractErrors(ModelState);
             return View("Error", errors);
         }
 
         public IActionResult Edit(int Id)
         {
+            // Also - no Guardian pattern. I'm watching in the end of the method and see "return Error" and I don't undestand what this method is doing.
+            // I need to look at all method to undestand how it is working. You need to create logic in way "check - check - check - logic - return result", where every check is blocking check (if fails - return bad response).
             if (Id < 1)
             {
                 ModelState.AddModelError("Id", $"Id: {Id} is out of range");
             }
-
+            // Also - you don't need to go deeper, because if Id is bad - you don't need to try get it from DB - it is bad.
             var url = _urlRepository.GetById(Id);
             if (url == null)
             {
@@ -133,8 +146,11 @@ namespace Test_Work.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int Id, string LongUrl)
+        public IActionResult Edit(int Id, string LongUrl) // Why PascalCase in arguments?
         {
+            // Guardian. Again here and in the other methods below. Also logic of checkin Id is the same in all your methods and you copy-pasted it everywhere. 
+            // It is duplicated logic, which must be moved to the separate method. 
+            // Because if you will modify it in one place - you must modify it in all other places.
             if (Id < 1)
             {
                 ModelState.AddModelError("Id", $"Id: {Id} is out of range");
